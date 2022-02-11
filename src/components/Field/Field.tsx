@@ -47,48 +47,64 @@ export const Field: React.FC<Props> = ({minesCount, onWin, onLose}) => {
     return field;
   })());
 
+  const [gameEnded, setGameEnded] = useState(false);
+
   useEffect(() => {
     // Не осталось закрытых свободных ячеек
     if (!field.flat().some(({status}) => status === 'Closed')) {
-      onWin();
+      handleWin();
     }
   }, [field]);
 
   const revealFrom = (x: number, y: number) => {
-    // Обходим поле поиском в ширину и обновляем состояние
-    const queue: Coord[] = [[x, y]];
-    const newField = cloneDeep(field);
+    if (!gameEnded) {
+      // Обходим поле поиском в ширину и обновляем состояние
+      const queue: Coord[] = [[x, y]];
+      const newField = cloneDeep(field);
 
-    while (queue.length > 0) {
-      const [a, b] = queue.pop()!;
-      const neighbors = getNeighbors(a, b);
-      const minedNeighbors = neighbors.filter(([x, y]) => isMined(x, y));
-      newField[a][b] = {
-        status: minedNeighbors.length,
-        marker: false,
-      };
+      while (queue.length > 0) {
+        const [a, b] = queue.pop()!;
+        const neighbors = getNeighbors(a, b);
+        const minedNeighbors = neighbors.filter(([x, y]) => isMined(x, y));
+        newField[a][b] = {
+          status: minedNeighbors.length,
+          marker: false,
+        };
 
-      if (minedNeighbors.length === 0) {
-        // Используем unshift, чтобы доставать через pop
-        queue.unshift(...(neighbors.filter(([x, y]) =>
-          newField[x][y].status === 'Closed')
-        ));
+        if (minedNeighbors.length === 0) {
+          // Используем unshift, чтобы доставать через pop
+          queue.unshift(...(neighbors.filter(([x, y]) =>
+            newField[x][y].status === 'Closed')
+          ));
+        }
       }
-    }
 
-    setField(newField);
+      setField(newField);
+    }
   };
 
   const isMined = (x: number, y:number) => field[x][y].status === 'Mined';
 
   const toggleMarked = (x: number, y: number) => {
-    const newField = cloneDeep(field);
+    if (!gameEnded) {
+      const newField = cloneDeep(field);
 
-    if (typeof field[x][y].status === 'string') { // Ячейка закрыта
-      newField[x][y].marker = !field[x][y].marker;
+      if (typeof field[x][y].status === 'string') { // Ячейка закрыта
+        newField[x][y].marker = !field[x][y].marker;
+      }
+
+      setField(newField);
     }
+  };
 
-    setField(newField);
+  const handleWin = () => {
+    setGameEnded(true);
+    onWin();
+  };
+
+  const handleLose = () => {
+    setGameEnded(true);
+    onLose();
   };
 
   const renderCell = (x: number, y: number) => {
@@ -113,7 +129,7 @@ export const Field: React.FC<Props> = ({minesCount, onWin, onLose}) => {
         return (
           <button
             key={y}
-            onClick={onLose}
+            onClick={handleLose}
             onContextMenu={(e) => {
               e.preventDefault();
               toggleMarked(x, y);
@@ -121,7 +137,8 @@ export const Field: React.FC<Props> = ({minesCount, onWin, onLose}) => {
             className={
               `${styles.cell} ` +
               `${styles.closed} ` +
-              `${field[x][y].marker ? styles.marked : ''}`
+              `${field[x][y].marker ? styles.marked : ''} ` +
+              `${gameEnded ? styles.mined : ''}`
             }
           >{field[x][y].marker ? 'M' : ''}</button>
         );
