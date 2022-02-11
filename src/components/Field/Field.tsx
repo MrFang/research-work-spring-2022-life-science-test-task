@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import styles from './Field.module.css';
 import {uniqWith, cloneDeep} from 'lodash';
 import {Cell, Coord, Props} from './types';
@@ -33,7 +33,7 @@ const getNeighbors = (x: number, y: number): Coord[] => {
   ] as Coord[]).filter(([a, b]) => a >= 0 && a < 10 && b >= 0 && b < 10);
 };
 
-export const Field: React.FC<Props> = ({minesCount}) => {
+export const Field: React.FC<Props> = ({minesCount, onWin, onLose}) => {
   const [field, setField] = useState((() => {
     const field: Cell[][] = RANGE_10.map(() =>
       RANGE_10.map(() =>
@@ -46,6 +46,13 @@ export const Field: React.FC<Props> = ({minesCount}) => {
 
     return field;
   })());
+
+  useEffect(() => {
+    // Не осталось закрытых свободных ячеек
+    if (!field.flat().some(({status}) => status === 'Closed')) {
+      onWin();
+    }
+  }, [field]);
 
   const revealFrom = (x: number, y: number) => {
     // Обходим поле поиском в ширину и обновляем состояние
@@ -89,6 +96,7 @@ export const Field: React.FC<Props> = ({minesCount}) => {
       case 'Closed':
         return (
           <button
+            key={y}
             onClick={() => revealFrom(x, y)}
             onContextMenu={(e) => {
               e.preventDefault();
@@ -104,6 +112,8 @@ export const Field: React.FC<Props> = ({minesCount}) => {
       case 'Mined':
         return (
           <button
+            key={y}
+            onClick={onLose}
             onContextMenu={(e) => {
               e.preventDefault();
               toggleMarked(x, y);
@@ -118,12 +128,14 @@ export const Field: React.FC<Props> = ({minesCount}) => {
       case 0:
         return (
           <button
+            key={y}
             className={`${styles.cell} ${styles.open}`}
           ></button>
         );
       default:
         return (
           <button
+            key={y}
             className={`${styles.cell} ${styles.open}`}
           >
             {field[x][y].status}

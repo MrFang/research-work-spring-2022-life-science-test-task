@@ -13,4 +13,6 @@ export type Coord = [number, number]
 
 export interface Props {
   minesCount: number,
+  onWin: () => void,
+  onLose: () => void,
 }
