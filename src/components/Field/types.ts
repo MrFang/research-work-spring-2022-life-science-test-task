@@ -1,18 +1,10 @@
-/**
- * Статус ячейки
- * "Mined" -- Ячейка закрыта В ячейке мина
- * "Closed" -- Ячейка закрыта и свободна
- * Число -- Ячейка открыта. Число мин в соседних ячейках
- */
-export interface Cell {
-  status: 'Mined' | 'Closed' | number,
-  marker: boolean,
-}
-
-export type Coord = [number, number]
+import React from 'react';
+import {Cell} from '../../types';
 
 export interface Props {
-  minesCount: number,
-  onWin: () => void,
-  onLose: () => void,
-}
+  field: Cell[][],
+  onCellClick: (x: number, y: number) => (e: React.MouseEvent) => void,
+  onCellContextMenu: (x: number, y: number) => (e: React.MouseEvent) => void,
+  // Передаётся сюда для  правильной стилизации
+  gameWon: boolean | null,
+};

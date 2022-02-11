@@ -1,0 +1,9 @@
+.resetButton {
+  margin-top: 15px;
+  margin-left: 10px;
+  width: 100px;
+  min-height: 20px;
+  border-radius: 5px;
+  background-color: #434eaf;
+  color: white;
+}
