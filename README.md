@@ -5,4 +5,4 @@
  - `npm install`
  - `npm start`
 
-Готовых компонентов использовано не было, но проект создавался с помощью Create React App (Лицензия: MIT, [Сайт](https://create-react-app.dev/)), так же используется библиотека lodash (Лицензия MIT, [Сайт](https://lodash.com/))
+Готовых компонентов использовано не было, но проект создавался с помощью Create React App (Лицензия: MIT, [Сайт](https://create-react-app.dev/)), так же используется библиотека lodash (Лицензия: MIT, [Сайт](https://lodash.com/))
