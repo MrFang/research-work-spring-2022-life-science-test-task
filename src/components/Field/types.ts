@@ -1,13 +1,16 @@
 /**
  * Статус ячейки
- * "Mined" -- В ячеке мина
- * "Closed" -- Ячейка закрыта
- * Число -- Число мин в соседних ячейках
+ * "Mined" -- Ячейка закрыта В ячейке мина
+ * "Closed" -- Ячейка закрыта и свободна
+ * Число -- Ячейка открыта. Число мин в соседних ячейках
  */
-export type CellStatus = "Mined" | "Closed" | "Marked" | number
+export interface Cell {
+  status: 'Mined' | 'Closed' | number,
+  marker: boolean,
+}
 
 export type Coord = [number, number]
 
 export interface Props {
-  minesCount: number
+  minesCount: number,
 }
