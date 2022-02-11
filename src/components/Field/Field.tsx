@@ -34,7 +34,7 @@ export const Field: React.FC<Props> = ({
               `${styles.cell} ` +
               `${styles.closed} ` +
               `${field[x][y].marker ? styles.marked : ''} ` +
-              `${gameWon ? styles.mined : ''}`
+              `${gameWon !== null ? styles.mined : ''}`
             }
           >{field[x][y].marker ? 'M' : ''}</button>
         );
