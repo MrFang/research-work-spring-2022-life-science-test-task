@@ -1,8 +1,8 @@
 import React, {useEffect, useState} from 'react';
 import {cloneDeep, uniqWith} from 'lodash';
-import {RANGE_10} from '../../consts';
-import {Cell, Coord} from '../../types';
-import {Field} from '../Field';
+import {RANGE_10} from 'consts';
+import {Cell, Coord} from 'types';
+import {Field} from 'components/Field';
 import styles from './App.module.css';
 
 const getMinesCoordinates = (count: number): Coord[] => {

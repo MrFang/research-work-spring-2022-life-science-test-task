@@ -1,7 +1,7 @@
 import React from 'react';
 import styles from './Field.module.css';
 import {Props} from './types';
-import {RANGE_10} from '../../consts';
+import {RANGE_10} from 'consts';
 
 export const Field: React.FC<Props> = ({
   field,
